@@ -13,13 +13,17 @@ use App\Http\Requests\Api\V1\ResetPasswordRequest;
 use App\Http\Requests\Api\V1\VerifyEmailRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Services\AvatarService;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\PersonalAccessToken;
+use Laravel\Socialite\Facades\Socialite;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 final class AuthController extends ApiController
 {
@@ -150,5 +154,95 @@ final class AuthController extends ApiController
             },
             400
         );
+    }
+    public function refresh(Request $request, AvatarService $avatar): JsonResponse
+    {
+        /** @var User $user */
+        $user = $request->user();
+
+        $avatar->ensureLocalAvatar($user);
+
+        return $this->success($this->formatUserData($user), 'Token refreshed successfully');
+    }
+
+    public function socialRedirect(string $provider): RedirectResponse
+    {
+        /** @var \Laravel\Socialite\Two\AbstractProvider $driver */
+        $driver = Socialite::driver($provider);
+
+        return $driver->stateless()->redirect();
+    }
+
+    public function socialCallback(string $provider, AvatarService $avatar): RedirectResponse
+    {
+        try {
+            /** @var \Laravel\Socialite\Two\AbstractProvider $driver */
+            $driver = Socialite::driver($provider);
+            /** @var \Laravel\Socialite\Two\User $socialUser */
+            $socialUser = $driver->stateless()->user();
+        } catch (\Exception $e) {
+            $url = config('app.frontend_url');
+            $frontendUrl = is_string($url) ? $url : 'http://localhost:3000';
+            return redirect($frontendUrl . '/signin?error=Invalid credentials');
+        }
+
+        $user = User::where('email', $socialUser->getEmail())->first();
+
+        if (!$user) {
+            $username = Str::slug($socialUser->getName() ?? $socialUser->getNickname() ?? '', '');
+
+            $originalUsername = $username;
+            $count = 1;
+            while (User::where('username', $username)->exists()) {
+                $username = $originalUsername . $count++;
+            }
+
+            $user = User::create([
+                'name' => $socialUser->getName() ?? $socialUser->getNickname(),
+                'email' => $socialUser->getEmail(),
+                'username' => $username,
+                'provider_id' => $socialUser->getId(),
+                'provider_name' => $provider,
+                'avatar' => $socialUser->getAvatar(),
+            ]);
+
+            $user->assignRole('User');
+        } else {
+            $user->update([
+                'name' => $socialUser->getName() ?? $socialUser->getNickname(),
+                'provider_id' => $socialUser->getId(),
+                'provider_name' => $provider,
+                'avatar' => $socialUser->getAvatar(),
+            ]);
+        }
+
+        $avatar->ensureLocalAvatar($user);
+
+        $url = config('app.frontend_url', 'http://localhost:3000');
+        $frontendUrl = is_string($url) ? $url : 'http://localhost:3000';
+
+        $accessToken = $user->createToken('credential-login')->plainTextToken;
+        $refreshToken = $user->createToken('credential-refresh')->plainTextToken;
+
+        return redirect($frontendUrl . '/oauth/callback?accessToken=' . $accessToken . '&refreshToken=' . $refreshToken);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function formatUserData(User $user): array
+    {
+        $accessToken = $user->createToken('credential-login')->plainTextToken;
+        $refreshToken = $user->createToken('credential-refresh')->plainTextToken;
+
+        return [
+            'user' => new UserResource($user),
+            'roles' => $user->roles->pluck('name')->implode(','),
+            'permissions' => $user->permissions->pluck('name')->toArray(),
+            'tokens' => [
+                'accessToken' => $accessToken,
+                'refreshToken' => $refreshToken,
+            ],
+        ];
     }
 }

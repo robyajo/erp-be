@@ -11,8 +11,12 @@
         "grazulex/laravel-apiroute": "^2.0",
         "laravel/framework": "^13.0",
         "laravel/sanctum": "^4.0",
+        "laravel/socialite": "*",
         "laravel/tinker": "^3.0",
+        "socialiteproviders/google": "^4.1",
+        "socialiteproviders/zoho": "^4.1",
         "spatie/laravel-data": "^4.0",
+        "spatie/laravel-permission": "^7.4",
         "spatie/laravel-query-builder": "^7.0"
     },
     "require-dev": {

@@ -13,6 +13,9 @@ use Illuminate\Routing\Route;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Event;
+use SocialiteProviders\Manager\SocialiteWasCalled;
+use SocialiteProviders\Zoho\Provider;
 
 final class AppServiceProvider extends ServiceProvider
 {
@@ -34,9 +37,13 @@ final class AppServiceProvider extends ServiceProvider
             return Str::startsWith($route->uri, 'api/');
         });
         Scramble::afterOpenApiGenerated(function (OpenApi $openApi) {
-            $openApi->secure(
-                SecurityScheme::http('bearer')
-            );
+            /** @var SecurityScheme $scheme */
+            $scheme = SecurityScheme::http('bearer');
+            $openApi->secure($scheme);
+        });
+
+        Event::listen(function (SocialiteWasCalled $event) {
+            $event->extendSocialite('google', Provider::class);
         });
     }
 
