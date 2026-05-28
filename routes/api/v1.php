@@ -41,3 +41,10 @@ Route::middleware('throttle:6,1')->group(function (): void {
     Route::post('reset-password', [AuthController::class, 'resetPassword'])
         ->name('password.reset');
 });
+
+// Refresh token (requires auth)
+Route::middleware('auth:sanctum')->post('refresh', [AuthController::class, 'refresh'])->name('api.v1.refresh');
+
+// Social login (public)
+Route::get('social/{provider}', [AuthController::class, 'socialRedirect'])->name('api.v1.social.redirect');
+Route::get('social/{provider}/callback', [AuthController::class, 'socialCallback'])->name('api.v1.social.callback');

@@ -1,0 +1,6 @@
+# ERP Progress Tracker
+#
+# Format:
+# [YYYY-MM-DD HH:MM] <status> <task> — <detail>
+# Status: START | DONE | BLOCKED | CANCEL
+
