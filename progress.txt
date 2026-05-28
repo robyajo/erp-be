@@ -4,3 +4,11 @@
 # [YYYY-MM-DD HH:MM] <status> <task> — <detail>
 # Status: START | DONE | BLOCKED | CANCEL
 
+[2026-05-29 01:41] DONE Adapted erp-fe auth to match erp-be API — Updated types, services/auth, forms, NextAuth options, button-google URL, OAuth callback, error page, created forgot-password/reset-password/verify-email pages
+[2026-05-29 01:30] DONE Updated .agents/skills for ERP project — Replaced Vynix skills with backend-architect, frontend-architect, plugin-developer
+[2026-05-29 01:25] DONE Added missing routes to api/v1.php — Added refresh, social/{provider}, social/{provider}/callback
+[2026-05-29 01:20] DONE Updated AGENTS.md for erp-be and erp-fe
+[2026-05-29 02:00] DONE Fixed mail config — Changed MAIL_MAILER=log to smtp, added Mailtrap SMTP config
+[2026-05-29 02:05] DONE Added GET /api/v1/reset-password route — Redirects email reset link to frontend
+[2026-05-29 02:10] DONE Marked Google OAuth users email_verified_at on social callback
+

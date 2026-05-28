@@ -42,9 +42,22 @@ Route::middleware('throttle:6,1')->group(function (): void {
         ->name('password.reset');
 });
 
+// Redirect password reset link from email to frontend
+Route::get('reset-password', function (\Illuminate\Http\Request $request) {
+    $frontendUrl = config('app.frontend_url', 'http://localhost:3000');
+    $query = http_build_query($request->only('token', 'email'));
+    return redirect("{$frontendUrl}/reset-password?{$query}");
+})->name('password.reset.form');
+
 // Refresh token (requires auth)
 Route::middleware('auth:sanctum')->post('refresh', [AuthController::class, 'refresh'])->name('api.v1.refresh');
 
-// Social login (public)
-Route::get('social/{provider}', [AuthController::class, 'socialRedirect'])->name('api.v1.social.redirect');
-Route::get('social/{provider}/callback', [AuthController::class, 'socialCallback'])->name('api.v1.social.callback');
+
+/*
+    | Authentication
+    */
+Route::prefix('auth')->group(function () {
+    // Social login (public)
+    Route::get('/{provider}/redirect', [AuthController::class, 'socialRedirect'])->name('api.v1.social.redirect');
+    Route::get('/{provider}/callback', [AuthController::class, 'socialCallback'])->name('api.v1.social.callback');
+});

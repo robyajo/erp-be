@@ -155,12 +155,10 @@ final class AuthController extends ApiController
             400
         );
     }
-    public function refresh(Request $request, AvatarService $avatar): JsonResponse
+    public function refresh(Request $request): JsonResponse
     {
         /** @var User $user */
         $user = $request->user();
-
-        $avatar->ensureLocalAvatar($user);
 
         return $this->success($this->formatUserData($user), 'Token refreshed successfully');
     }
@@ -197,26 +195,36 @@ final class AuthController extends ApiController
                 $username = $originalUsername . $count++;
             }
 
-            $user = User::create([
+            $data = [
                 'name' => $socialUser->getName() ?? $socialUser->getNickname(),
                 'email' => $socialUser->getEmail(),
                 'username' => $username,
                 'provider_id' => $socialUser->getId(),
                 'provider_name' => $provider,
-                'avatar' => $socialUser->getAvatar(),
-            ]);
+                'email_verified_at' => now(),
+            ];
 
+            $avatar = $socialUser->getAvatar();
+            if ($avatar) {
+                $data['avatar'] = $avatar;
+            }
+
+            $user = User::create($data);
             $user->assignRole('User');
         } else {
-            $user->update([
+            $updateData = [
                 'name' => $socialUser->getName() ?? $socialUser->getNickname(),
                 'provider_id' => $socialUser->getId(),
                 'provider_name' => $provider,
-                'avatar' => $socialUser->getAvatar(),
-            ]);
-        }
+            ];
 
-        $avatar->ensureLocalAvatar($user);
+            $avatar = $socialUser->getAvatar();
+            if ($avatar) {
+                $updateData['avatar'] = $avatar;
+            }
+
+            $user->update($updateData);
+        }
 
         $url = config('app.frontend_url', 'http://localhost:3000');
         $frontendUrl = is_string($url) ? $url : 'http://localhost:3000';

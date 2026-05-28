@@ -14,8 +14,9 @@ use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Event;
+use SocialiteProviders\Google\Provider;
 use SocialiteProviders\Manager\SocialiteWasCalled;
-use SocialiteProviders\Zoho\Provider;
+
 
 final class AppServiceProvider extends ServiceProvider
 {
