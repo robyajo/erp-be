@@ -49,6 +49,26 @@ Route::get('reset-password', function (\Illuminate\Http\Request $request) {
     return redirect("{$frontendUrl}/reset-password?{$query}");
 })->name('password.reset.form');
 
+// Email verification link from email (GET) — redirects to frontend with result
+Route::get('email/verify/{id}/{hash}', function (string $id, string $hash, \Illuminate\Http\Request $request) {
+    $frontendUrl = config('app.frontend_url', 'http://localhost:3000');
+
+    $user = \App\Models\User::find($id);
+    if (!$user) {
+        return redirect("{$frontendUrl}/verify-email?verified=invalid");
+    }
+
+    if ($user->hasVerifiedEmail()) {
+        return redirect("{$frontendUrl}/verify-email?verified=true");
+    }
+
+    if ($user->markEmailAsVerified()) {
+        event(new \Illuminate\Auth\Events\Verified($user));
+    }
+
+    return redirect("{$frontendUrl}/verify-email?verified=true");
+})->middleware('signed')->name('verification.verify.get');
+
 // Refresh token (requires auth)
 Route::middleware('auth:sanctum')->post('refresh', [AuthController::class, 'refresh'])->name('api.v1.refresh');
 

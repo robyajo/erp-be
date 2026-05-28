@@ -27,10 +27,25 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 final class AuthController extends ApiController
 {
+    private function makeUsername(string $name, string $fallback = 'user'): string
+    {
+        $base = Str::slug($name, '');
+        if (empty($base)) {
+            $base = $fallback;
+        }
+        $username = $base;
+        $count = 1;
+        while (User::where('username', $username)->exists()) {
+            $username = $base . $count++;
+        }
+        return $username;
+    }
     public function register(RegisterRequest $request): JsonResponse
     {
         $user = User::query()->create([
             'name' => $request->name,
+            'username' => $this->makeUsername($request->name),
+            'provider_name' => 'credentials',
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
@@ -187,18 +202,13 @@ final class AuthController extends ApiController
         $user = User::where('email', $socialUser->getEmail())->first();
 
         if (!$user) {
-            $username = Str::slug($socialUser->getName() ?? $socialUser->getNickname() ?? '', '');
-
-            $originalUsername = $username;
-            $count = 1;
-            while (User::where('username', $username)->exists()) {
-                $username = $originalUsername . $count++;
-            }
-
             $data = [
                 'name' => $socialUser->getName() ?? $socialUser->getNickname(),
                 'email' => $socialUser->getEmail(),
-                'username' => $username,
+                'username' => $this->makeUsername(
+                    $socialUser->getName() ?? $socialUser->getNickname() ?? '',
+                    explode('@', (string) $socialUser->getEmail())[0]
+                ),
                 'provider_id' => $socialUser->getId(),
                 'provider_name' => $provider,
                 'email_verified_at' => now(),

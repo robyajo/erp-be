@@ -12,4 +12,5 @@
 [2026-05-29 02:05] DONE Added GET /api/v1/reset-password route — Redirects email reset link to frontend
 [2026-05-29 02:10] DONE Marked Google OAuth users email_verified_at on social callback
 [2026-05-29 03:00] DONE Set Sanctum token expiry to 24 hours (1440 min)
+[2026-05-29 03:30] DONE Added GET route for email verification link — Redirects to frontend with ?verified=true/invalid
 
