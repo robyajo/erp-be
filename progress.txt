@@ -38,3 +38,11 @@
 [2026-06-01 11:00] DONE PluginController install/uninstall/available now filter by authenticated user
 [2026-06-01 11:30] DONE UserResource now returns plugins field — /api/v1/me shows installed plugins per user
 
+[2026-06-02 07:00] DONE Added /api/v1/plugins/menus endpoint — Returns headerNav + sidebar config per plugin
+[2026-06-02 07:30] DONE Updated PluginController.install to use updateOrInsert — Fixes reinstall after uninstall (unique key violation)
+[2026-06-02 08:00] DONE Created make:plugin artisan command — Generates full plugin structure (composer.json, ServiceProvider, routes)
+[2026-06-02 08:30] DONE Created make:plugin-model artisan command — Generates model with auto table prefix + namespace
+[2026-06-02 09:00] DONE Created make:plugin-migration artisan command — Generates migration with auto prefix
+[2026-06-02 09:30] DONE Registered all three commands in PluginManagerServiceProvider.packageRegistered()
+[2026-06-02 10:00] DONE Created plugin-cli.md — Usage documentation with examples
+

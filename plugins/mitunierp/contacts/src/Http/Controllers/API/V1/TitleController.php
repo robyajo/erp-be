@@ -15,7 +15,7 @@ final class TitleController extends ApiController
     public function index(Request $request): JsonResponse
     {
         $titles = QueryBuilder::for(Title::class)
-            ->allowedSorts(['name', 'created_at'])
+            ->allowedSorts('name', 'created_at')
             ->defaultSort('name')
             ->paginate($request->input('per_page', 15));
 

@@ -15,8 +15,8 @@ final class CategoryController extends ApiController
     public function index(Request $request): JsonResponse
     {
         $categories = QueryBuilder::for(Category::class)
-            ->allowedFilters(['name', 'is_active'])
-            ->allowedSorts(['name', 'sort', 'created_at'])
+            ->allowedFilters('name', 'is_active')
+            ->allowedSorts('name', 'sort', 'created_at')
             ->defaultSort('sort')
             ->paginate($request->input('per_page', 15));
 

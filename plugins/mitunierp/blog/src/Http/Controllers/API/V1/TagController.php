@@ -15,8 +15,8 @@ final class TagController extends ApiController
     public function index(Request $request): JsonResponse
     {
         $tags = QueryBuilder::for(Tag::class)
-            ->allowedFilters(['name'])
-            ->allowedSorts(['name', 'sort'])
+            ->allowedFilters('name')
+            ->allowedSorts('name', 'sort')
             ->defaultSort('sort')
             ->paginate($request->input('per_page', 15));
 

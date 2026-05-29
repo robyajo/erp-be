@@ -15,8 +15,8 @@ final class OperationTypeController extends ApiController
     public function index(Request $request): JsonResponse
     {
         $operationTypes = QueryBuilder::for(OperationType::class)
-            ->allowedFilters(['name', 'code', 'type', 'is_active'])
-            ->allowedSorts(['name', 'type', 'created_at'])
+            ->allowedFilters('name', 'code', 'type', 'is_active')
+            ->allowedSorts('name', 'type', 'created_at')
             ->defaultSort('name')
             ->paginate($request->input('per_page', 15));
 

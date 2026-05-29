@@ -15,8 +15,8 @@ final class WarehouseController extends ApiController
     public function index(Request $request): JsonResponse
     {
         $warehouses = QueryBuilder::for(Warehouse::class)
-            ->allowedFilters(['name', 'code', 'city', 'is_active'])
-            ->allowedSorts(['name', 'code', 'city', 'created_at'])
+            ->allowedFilters('name', 'code', 'city', 'is_active')
+            ->allowedSorts('name', 'code', 'city', 'created_at')
             ->defaultSort('name')
             ->paginate($request->input('per_page', 15));
 

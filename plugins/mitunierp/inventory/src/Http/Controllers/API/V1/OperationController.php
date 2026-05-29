@@ -17,14 +17,14 @@ final class OperationController extends ApiController
     public function index(Request $request): JsonResponse
     {
         $operations = QueryBuilder::for(Operation::class)
-            ->allowedIncludes(['operationType', 'moves', 'sourceLocation', 'destinationLocation'])
-            ->allowedFilters([
+            ->allowedIncludes('operationType', 'moves', 'sourceLocation', 'destinationLocation')
+            ->allowedFilters(
                 AllowedFilter::exact('operation_type_id'),
                 AllowedFilter::exact('state'),
                 AllowedFilter::partial('name'),
                 AllowedFilter::partial('reference'),
-            ])
-            ->allowedSorts(['name', 'state', 'created_at', 'scheduled_at'])
+            )
+            ->allowedSorts('name', 'state', 'created_at', 'scheduled_at')
             ->defaultSort('-created_at')
             ->paginate($request->input('per_page', 15));
 

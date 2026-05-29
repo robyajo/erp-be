@@ -15,8 +15,8 @@ final class IndustryController extends ApiController
     public function index(Request $request): JsonResponse
     {
         $industries = QueryBuilder::for(Industry::class)
-            ->allowedFilters(['name', 'is_active'])
-            ->allowedSorts(['name', 'created_at'])
+            ->allowedFilters('name', 'is_active')
+            ->allowedSorts('name', 'created_at')
             ->defaultSort('name')
             ->paginate($request->input('per_page', 15));
 

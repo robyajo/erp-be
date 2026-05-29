@@ -15,8 +15,8 @@ final class LocationController extends ApiController
     public function index(Request $request): JsonResponse
     {
         $locations = QueryBuilder::for(Location::class)
-            ->allowedFilters(['name', 'warehouse_id', 'is_active'])
-            ->allowedSorts(['name', 'created_at'])
+            ->allowedFilters('name', 'warehouse_id', 'is_active')
+            ->allowedSorts('name', 'created_at')
             ->defaultSort('name')
             ->paginate($request->input('per_page', 15));
 

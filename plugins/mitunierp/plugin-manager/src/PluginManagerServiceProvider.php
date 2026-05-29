@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace Mitunierp\PluginManager;
 
+use Mitunierp\PluginManager\Console\Commands\MakePluginCommand;
+use Mitunierp\PluginManager\Console\Commands\MakePluginControllerCommand;
+use Mitunierp\PluginManager\Console\Commands\MakePluginMigrationCommand;
+use Mitunierp\PluginManager\Console\Commands\MakePluginModelCommand;
+
 final class PluginManagerServiceProvider extends PackageServiceProvider
 {
     public function configureCustomPackage(Package $package): void
@@ -30,5 +35,15 @@ final class PluginManagerServiceProvider extends PackageServiceProvider
                     $package->updateOrCreate();
                 });
             });
+    }
+
+    public function packageRegistered(): void
+    {
+        $this->commands([
+            MakePluginCommand::class,
+            MakePluginControllerCommand::class,
+            MakePluginModelCommand::class,
+            MakePluginMigrationCommand::class,
+        ]);
     }
 }

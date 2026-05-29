@@ -16,13 +16,13 @@ final class PostController extends ApiController
     public function index(Request $request): JsonResponse
     {
         $posts = QueryBuilder::for(Post::class)
-            ->allowedIncludes(['category', 'tags'])
-            ->allowedFilters([
+            ->allowedIncludes('category', 'tags')
+            ->allowedFilters(
                 AllowedFilter::exact('category_id'),
                 AllowedFilter::partial('title'),
                 AllowedFilter::exact('is_published'),
-            ])
-            ->allowedSorts(['title', 'published_at', 'created_at'])
+            )
+            ->allowedSorts('title', 'published_at', 'created_at')
             ->defaultSort('-published_at')
             ->paginate($request->input('per_page', 15));
 

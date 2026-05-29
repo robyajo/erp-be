@@ -16,16 +16,16 @@ final class PartnerController extends ApiController
     public function index(Request $request): JsonResponse
     {
         $partners = QueryBuilder::for(Partner::class)
-            ->allowedIncludes(['title', 'industry', 'company', 'tags'])
-            ->allowedFilters([
+            ->allowedIncludes('title', 'industry', 'company', 'tags')
+            ->allowedFilters(
                 AllowedFilter::exact('account_type'),
                 AllowedFilter::partial('name'),
                 AllowedFilter::partial('email'),
                 AllowedFilter::partial('city'),
                 AllowedFilter::exact('industry_id'),
                 AllowedFilter::exact('is_active'),
-            ])
-            ->allowedSorts(['name', 'created_at', 'city'])
+            )
+            ->allowedSorts('name', 'created_at', 'city')
             ->defaultSort('name')
             ->paginate($request->input('per_page', 15));
 

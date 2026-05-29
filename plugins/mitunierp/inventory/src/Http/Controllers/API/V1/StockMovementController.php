@@ -19,14 +19,14 @@ final class StockMovementController extends ApiController
     public function index(Request $request): JsonResponse
     {
         $movements = QueryBuilder::for(StockMovement::class)
-            ->allowedIncludes(['product', 'warehouse', 'user'])
-            ->allowedFilters([
+            ->allowedIncludes('product', 'warehouse', 'user')
+            ->allowedFilters(
                 AllowedFilter::exact('product_id'),
                 AllowedFilter::exact('warehouse_id'),
                 AllowedFilter::exact('type'),
                 AllowedFilter::exact('user_id'),
-            ])
-            ->allowedSorts(['created_at', 'type'])
+            )
+            ->allowedSorts('created_at', 'type')
             ->defaultSort('-created_at')
             ->paginate($request->input('per_page', 15));
 

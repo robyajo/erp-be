@@ -16,15 +16,15 @@ final class ProductController extends ApiController
     public function index(Request $request): JsonResponse
     {
         $products = QueryBuilder::for(Product::class)
-            ->allowedIncludes(['category'])
-            ->allowedFilters([
+            ->allowedIncludes('category')
+            ->allowedFilters(
                 AllowedFilter::exact('category_id'),
                 AllowedFilter::partial('name'),
                 AllowedFilter::partial('sku'),
                 AllowedFilter::partial('barcode'),
                 AllowedFilter::exact('is_active'),
-            ])
-            ->allowedSorts(['name', 'sku', 'price', 'created_at'])
+            )
+            ->allowedSorts('name', 'sku', 'price', 'created_at')
             ->defaultSort('name')
             ->paginate($request->input('per_page', 15));
 

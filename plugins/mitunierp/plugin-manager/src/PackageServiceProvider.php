@@ -38,7 +38,10 @@ abstract class PackageServiceProvider extends BasePackageServiceProvider
 
         $this->bootPackageConsoleCommands();
 
-        if ($this->package->isCore || Package::isPluginInstalled($this->package->shortName())) {
+        /** @var Package $package */
+        $package = $this->package;
+
+        if ($package->isCore || Package::isPluginInstalled($package->shortName())) {
             $this
                 ->bootPackageMigrations()
                 ->bootPackageRoutes()
