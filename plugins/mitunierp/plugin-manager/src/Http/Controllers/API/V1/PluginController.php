@@ -100,12 +100,13 @@ final class PluginController extends ApiController
             ],
             'settings' => [
                 'headerNav' => [
+                    ['label' => 'Settings', 'href' => '/settings'],
                     ['label' => 'Roles', 'href' => '/settings/roles'],
                     ['label' => 'Companies', 'href' => '/settings/companies'],
                     ['label' => 'Teams', 'href' => '/settings/teams'],
                     ['label' => 'Users', 'href' => '/settings/users'],
                     ['label' => 'Custom Fields', 'href' => '/settings/custom-fields'],
-                    ['label' => 'Settings', 'href' => '/settings'],
+
                 ],
                 'sidebar' => [
                     'roles' => [
@@ -249,12 +250,10 @@ final class PluginController extends ApiController
                 ]
             );
 
-            DB::table('user_plugin')->insert([
-                'user_id' => $userId,
-                'plugin_name' => $name,
-                'is_active' => true,
-                'installed_at' => now(),
-            ]);
+            DB::table('user_plugin')->updateOrInsert(
+                ['user_id' => $userId, 'plugin_name' => $name],
+                ['is_active' => true, 'installed_at' => now()],
+            );
 
             DB::commit();
 
