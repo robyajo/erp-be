@@ -14,3 +14,16 @@
 [2026-05-29 03:00] DONE Set Sanctum token expiry to 24 hours (1440 min)
 [2026-05-29 03:30] DONE Added GET route for email verification link — Redirects to frontend with ?verified=true/invalid
 
+[2026-05-29 07:00] START Plugin system implementation — Built core plugin-manager + inventory plugin based on concept-plans.md
+[2026-05-29 07:30] DONE Installed wikimedia/composer-merge-plugin + spatie/laravel-package-tools
+[2026-05-29 08:00] DONE Created core plugin-manager — Package.php, PackageServiceProvider, Plugin model, plugins table migration, Install/Uninstall commands, PluginController (API)
+[2026-05-29 08:30] DONE Created inventory plugin — Category, Product, Warehouse, StockMovement models + controllers + StockService + migrations + routes
+[2026-05-29 08:45] DONE Set up composer merge-plugin config + PSR-4 autoload for plugins directory
+[2026-05-29 09:00] DONE Installed plugin-manager and inventory, verified 37 routes (21 inventory + 3 plugins + 13 auth)
+[2026-05-29 09:30] DONE Renamed namespace from Acme to Mitunierp — Updated all files, directories, composer.json, bootstrap/providers.php
+[2026-05-29 10:00] DONE Upgraded inventory plugin with state machine architecture — Added Operation (draft→confirmed→assigned→done→canceled), Move, MoveLine, Location, OperationType, ProductQuantity models + migrations + InventoryManager service
+[2026-05-29 10:30] DONE Added 20+ new API endpoints — Locations CRUD, OperationTypes CRUD, Operations with workflow actions (confirm/assign/validate/cancel/return)
+[2026-05-29 11:00] DONE Created seeders for both plugins — PluginManagerSeeder (default core plugin), InventorySeeder (1 warehouse, 5 locations, 3 operation types)
+[2026-05-29 11:15] DONE Updated seeders run automatically during plugin install via db:seed command
+[2026-05-29 11:30] DONE Updated concept docs — Replaced acme references with mitunierp in concept-plans.md and concept-fullstack.md
+

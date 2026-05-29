@@ -1,0 +1,22 @@
+{
+    "name": "mitunierp/inventory",
+    "description": "Inventory management plugin - products, warehouses, operations, stock management",
+    "type": "library",
+    "require": {
+        "php": "^8.3",
+        "spatie/laravel-package-tools": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mitunierp\\Inventory\\": "src/",
+            "Mitunierp\\Inventory\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Mitunierp\\Inventory\\InventoryServiceProvider"
+            ]
+        }
+    }
+}

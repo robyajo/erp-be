@@ -1,0 +1,21 @@
+{
+    "name": "mitunierp/contacts",
+    "description": "Contact management - partners, companies, addresses",
+    "type": "library",
+    "require": {
+        "php": "^8.3",
+        "spatie/laravel-package-tools": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mitunierp\\Contacts\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Mitunierp\\Contacts\\ContactsServiceProvider"
+            ]
+        }
+    }
+}

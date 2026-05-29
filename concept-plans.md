@@ -76,7 +76,7 @@ my-app/
 │   │       ├── Models/Plugin.php
 │   │       └── Http/Controllers/API/V1/PluginController.php
 │   │
-│   ├── acme/blog/                                    ← Contoh plugin
+│   ├── mitunierp/blog/                                    ← Contoh plugin
 │   │   ├── composer.json
 │   │   └── src/
 │   │       ├── BlogServiceProvider.php
@@ -94,7 +94,7 @@ my-app/
 │   │   ├── resources/lang/
 │   │   └── routes/api.php
 │   │
-│   └── acme/inventory/                               ← Contoh plugin
+│   └── mitunierp/inventory/                               ← Contoh plugin
 │       ├── composer.json
 │       └── src/
 │           ├── InventoryServiceProvider.php
@@ -113,7 +113,7 @@ my-app/
 ### 2.2. Anatomi Plugin
 
 ```
-plugins/acme/nama/
+plugins/mitunierp/nama/
 ├── composer.json              ← Autoload PSR-4 + Laravel providers
 ├── src/
 │   └── NamaServiceProvider.php
@@ -324,7 +324,7 @@ class InstallCommand extends Command
 | 10   | Buat `InstallCommand.php`, `UninstallCommand.php`  | Lihat 4.5         |
 | 11   | Buat `Models/Plugin.php`                           | Eloquent model    |
 | 12   | Daftarkan ke `bootstrap/providers.php`             |                   |
-| 13   | Buat plugin contoh `plugins/acme/blog/`            | Lihat 7.1         |
+| 13   | Buat plugin contoh `plugins/mitunierp/blog/`            | Lihat 7.1         |
 | 14   | `composer dump-autoload`                           |                   |
 | 15   | `php artisan blog:install`                         | Test instalasi    |
 
@@ -416,19 +416,19 @@ php artisan blog:uninstall
 
 ### 7.1. Plugin Blog (Sederhana)
 
-**`plugins/acme/blog/composer.json`**:
+**`plugins/mitunierp/blog/composer.json`**:
 
 ```json
 {
-    "name": "acme/blog",
-    "autoload": { "psr-4": { "Acme\\Blog\\": "src/" } },
+    "name": "mitunierp/blog",
+    "autoload": { "psr-4": { "mitunierp\\Blog\\": "src/" } },
     "extra": {
-        "laravel": { "providers": ["Acme\\Blog\\BlogServiceProvider"] }
+        "laravel": { "providers": ["mitunierp\\Blog\\BlogServiceProvider"] }
     }
 }
 ```
 
-**`plugins/acme/blog/src/BlogServiceProvider.php`**:
+**`plugins/mitunierp/blog/src/BlogServiceProvider.php`**:
 
 ```php
 class BlogServiceProvider extends PackageServiceProvider
@@ -444,7 +444,7 @@ class BlogServiceProvider extends PackageServiceProvider
 }
 ```
 
-**`plugins/acme/blog/routes/api.php`**:
+**`plugins/mitunierp/blog/routes/api.php`**:
 
 ```php
 Route::prefix('api/v1/blog')->middleware('auth:sanctum')->group(function () {
@@ -543,7 +543,7 @@ php artisan blog:uninstall
 - [ ] Buat `InstallCommand`, `UninstallCommand`
 - [ ] Buat `plugins/core/plugin-manager/`
 - [ ] Daftarkan core provider di `bootstrap/providers.php`
-- [ ] Buat plugin contoh (`plugins/acme/blog/`)
+- [ ] Buat plugin contoh (`plugins/mitunierp/blog/`)
 - [ ] `composer dump-autoload`
 - [ ] `php artisan blog:install` → sukses
 - [ ] `GET /api/v1/blog/posts` → 200

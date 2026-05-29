@@ -87,7 +87,7 @@ my-app/
 │   │       ├── Console/UninstallCommand.php
 │   │       └── Models/Plugin.php
 │   │
-│   └── acme/blog/                                    ← Contoh plugin
+│   └── mitunierp/blog/                                    ← Contoh plugin
 │       ├── composer.json
 │       ├── src/
 │       │   ├── BlogServiceProvider.php
@@ -234,7 +234,7 @@ Di `vite.config.js`:
 ```js
 resolve: {
     alias: {
-        '@blog': path.resolve(__dirname, 'plugins/acme/blog/resources/js'),
+        '@blog': path.resolve(__dirname, 'plugins/mitunierp/blog/resources/js'),
     }
 }
 ```
@@ -262,7 +262,7 @@ $package->name('blog')
 
 ### 6.2. Registrasi Route + Inertia Page
 
-**`plugins/acme/blog/routes/web.php`**:
+**`plugins/mitunierp/blog/routes/web.php`**:
 
 ```php
 use Inertia\Inertia;
@@ -274,7 +274,7 @@ Route::middleware(['auth', 'verified'])->prefix('blog')->group(function () {
 });
 ```
 
-**`plugins/acme/blog/src/Http/Controllers/PostController.php`**:
+**`plugins/mitunierp/blog/src/Http/Controllers/PostController.php`**:
 
 ```php
 class PostController extends Controller
@@ -290,7 +290,7 @@ class PostController extends Controller
 
 ### 6.3. React Component Plugin Side
 
-**`plugins/acme/blog/resources/js/Pages/Posts/Index.jsx`**:
+**`plugins/mitunierp/blog/resources/js/Pages/Posts/Index.jsx`**:
 
 ```jsx
 import { Head, Link } from '@inertiajs/react';
@@ -373,7 +373,7 @@ Frontend utama cukup fetch data dari API plugin — tidak perlu registrasi React
 | 12 | Buat `InstallCommand.php`, `UninstallCommand.php` | |
 | 13 | Buat `Models/Plugin.php` | |
 | 14 | Daftarkan core provider di `bootstrap/providers.php` | |
-| 15 | Buat plugin contoh `plugins/acme/blog/` | |
+| 15 | Buat plugin contoh `plugins/mitunierp/blog/` | |
 | 16 | `composer dump-autoload` | |
 | 17 | `php artisan blog:install` | Test instalasi |
 
@@ -418,7 +418,7 @@ php artisan blog:uninstall
 ### 9.1. Struktur Plugin Blog
 
 ```
-plugins/acme/blog/
+plugins/mitunierp/blog/
 ├── composer.json
 ├── src/
 │   ├── BlogServiceProvider.php
@@ -508,7 +508,7 @@ class PostController extends Controller
 - [ ] Buat `InstallCommand`, `UninstallCommand`
 - [ ] Buat `plugins/core/plugin-manager/`
 - [ ] Daftarkan core provider di `bootstrap/providers.php`
-- [ ] Buat plugin contoh (`plugins/acme/blog/`)
+- [ ] Buat plugin contoh (`plugins/mitunierp/blog/`)
 - [ ] Buat React components di `resources/js/Pages/Blog/`
 - [ ] Setup Vite alias untuk plugin path (opsional)
 - [ ] `composer dump-autoload`

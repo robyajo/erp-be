@@ -1,0 +1,22 @@
+{
+    "name": "mitunierp/plugin-manager",
+    "description": "Core plugin management system for the ERP",
+    "type": "library",
+    "require": {
+        "php": "^8.3",
+        "spatie/laravel-package-tools": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mitunierp\\PluginManager\\": "src/",
+            "Mitunierp\\PluginManager\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Mitunierp\\PluginManager\\PluginManagerServiceProvider"
+            ]
+        }
+    }
+}

@@ -1,0 +1,21 @@
+{
+    "name": "mitunierp/blog",
+    "description": "Blog management - posts, categories, tags",
+    "type": "library",
+    "require": {
+        "php": "^8.3",
+        "spatie/laravel-package-tools": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mitunierp\\Blog\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Mitunierp\\Blog\\BlogServiceProvider"
+            ]
+        }
+    }
+}
