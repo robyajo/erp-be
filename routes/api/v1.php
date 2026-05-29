@@ -76,6 +76,7 @@ Route::middleware('auth:sanctum')->post('refresh', [AuthController::class, 'refr
 Route::prefix('plugins')->middleware('auth:sanctum')->group(function (): void {
     Route::get('/', [\Mitunierp\PluginManager\Http\Controllers\API\V1\PluginController::class, 'index'])->name('api.v1.plugins.index');
     Route::get('available', [\Mitunierp\PluginManager\Http\Controllers\API\V1\PluginController::class, 'available'])->name('api.v1.plugins.available');
+    Route::get('menus', [\Mitunierp\PluginManager\Http\Controllers\API\V1\PluginController::class, 'menus'])->name('api.v1.plugins.menus');
     Route::post('install', [\Mitunierp\PluginManager\Http\Controllers\API\V1\PluginController::class, 'install'])->name('api.v1.plugins.install');
     Route::post('uninstall', [\Mitunierp\PluginManager\Http\Controllers\API\V1\PluginController::class, 'uninstall'])->name('api.v1.plugins.uninstall');
 });

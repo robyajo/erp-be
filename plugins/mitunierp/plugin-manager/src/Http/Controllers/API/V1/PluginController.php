@@ -32,6 +32,117 @@ final class PluginController extends ApiController
         ],
     ];
 
+    public function menus(): JsonResponse
+    {
+        $menus = [
+            'inventory' => [
+                'headerNav' => [
+                    ['label' => 'Operations', 'href' => '/inventory/operations'],
+                    ['label' => 'Products', 'href' => '/inventory/products'],
+                    ['label' => 'Configurations', 'href' => '/inventory/warehouses'],
+                    ['label' => 'Settings', 'href' => '/settings'],
+                ],
+                'sidebar' => [
+                    'operations' => [
+                        ['label' => 'Transfers', 'items' => [
+                            ['title' => 'Receipts', 'url' => '/inventory/operations', 'icon' => 'inbox'],
+                            ['title' => 'Deliveries', 'url' => '/inventory/operations', 'icon' => 'truck'],
+                        ]],
+                        ['label' => 'Adjustments', 'items' => [
+                            ['title' => 'Quantities', 'url' => '/inventory/operations', 'icon' => 'clipboard-list'],
+                            ['title' => 'Scraps', 'url' => '/inventory/operations', 'icon' => 'trash-2'],
+                        ]],
+                    ],
+                    'products' => [
+                        ['label' => 'Products', 'items' => [
+                            ['title' => 'Products', 'url' => '/inventory/products', 'icon' => 'package'],
+                            ['title' => 'Categories', 'url' => '/inventory/categories', 'icon' => 'tags'],
+                        ]],
+                    ],
+                    'configurations' => [
+                        ['label' => 'Warehouse Management', 'items' => [
+                            ['title' => 'Warehouses', 'url' => '/inventory/warehouses', 'icon' => 'warehouse'],
+                            ['title' => 'Operation Types', 'url' => '/inventory/operations', 'icon' => 'settings'],
+                        ]],
+                        ['label' => 'Products', 'items' => [
+                            ['title' => 'Categories', 'url' => '/inventory/categories', 'icon' => 'tags'],
+                            ['title' => 'Attributes', 'url' => '/inventory/products', 'icon' => 'package'],
+                        ]],
+                    ],
+                ],
+            ],
+            'blog' => [
+                'headerNav' => [
+                    ['label' => 'Posts', 'href' => '/blog/posts'],
+                ],
+                'sidebar' => [
+                    'posts' => [
+                        ['label' => 'Content', 'items' => [
+                            ['title' => 'Posts', 'url' => '/blog/posts', 'icon' => 'file-text'],
+                            ['title' => 'Categories', 'url' => '/blog/categories', 'icon' => 'tags'],
+                        ]],
+                    ],
+                ],
+            ],
+            'contacts' => [
+                'headerNav' => [
+                    ['label' => 'All Contacts', 'href' => '/contacts'],
+                    ['label' => 'Industries', 'href' => '/contacts/industries'],
+                ],
+                'sidebar' => [
+                    'contacts' => [
+                        ['label' => 'Contacts', 'items' => [
+                            ['title' => 'All Contacts', 'url' => '/contacts', 'icon' => 'users'],
+                            ['title' => 'Industries', 'url' => '/contacts/industries', 'icon' => 'building-2'],
+                        ]],
+                    ],
+                ],
+            ],
+            'settings' => [
+                'headerNav' => [
+                    ['label' => 'Roles', 'href' => '/settings/roles'],
+                    ['label' => 'Companies', 'href' => '/settings/companies'],
+                    ['label' => 'Teams', 'href' => '/settings/teams'],
+                    ['label' => 'Users', 'href' => '/settings/users'],
+                    ['label' => 'Custom Fields', 'href' => '/settings/custom-fields'],
+                    ['label' => 'Settings', 'href' => '/settings'],
+                ],
+                'sidebar' => [
+                    'roles' => [
+                        ['label' => 'Access Control', 'items' => [
+                            ['title' => 'Roles', 'url' => '/settings/roles', 'icon' => 'shield'],
+                            ['title' => 'Permissions', 'url' => '/settings/roles', 'icon' => 'lock'],
+                        ]],
+                    ],
+                    'companies' => [
+                        ['label' => 'Organization', 'items' => [
+                            ['title' => 'Companies', 'url' => '/settings/companies', 'icon' => 'building-2'],
+                            ['title' => 'Teams', 'url' => '/settings/teams', 'icon' => 'users'],
+                        ]],
+                    ],
+                    'users' => [
+                        ['label' => 'User Management', 'items' => [
+                            ['title' => 'Users', 'url' => '/settings/users', 'icon' => 'user-circle'],
+                            ['title' => 'Invitations', 'url' => '/settings/users', 'icon' => 'mail'],
+                        ]],
+                    ],
+                    'custom-fields' => [
+                        ['label' => 'Custom Fields', 'items' => [
+                            ['title' => 'Fields', 'url' => '/settings/custom-fields', 'icon' => 'database'],
+                        ]],
+                    ],
+                    'settings' => [
+                        ['label' => 'General', 'items' => [
+                            ['title' => 'Settings', 'url' => '/settings', 'icon' => 'settings'],
+                        ]],
+                    ],
+                ],
+            ],
+        ];
+
+        return $this->success($menus);
+    }
+
     public function index(): JsonResponse
     {
         $plugins = Plugin::query()->orderBy('sort')->get();
@@ -39,9 +150,13 @@ final class PluginController extends ApiController
         return $this->success($plugins);
     }
 
-    public function available(): JsonResponse
+    public function available(Request $request): JsonResponse
     {
-        $installed = Plugin::query()->get()->keyBy('name');
+        $userPlugins = DB::table('user_plugin')
+            ->where('user_id', $request->user()->id)
+            ->where('is_active', true)
+            ->pluck('plugin_name')
+            ->all();
 
         $result = [];
         foreach (self::AVAILABLE as $name => $meta) {
@@ -53,7 +168,7 @@ final class PluginController extends ApiController
                 'latest_version' => '1.0.0',
                 'license' => 'MIT',
                 'author' => 'Mitunierp',
-                'installed' => isset($installed[$name]) && $installed[$name]->is_installed,
+                'installed' => in_array($name, $userPlugins, true),
             ];
         }
 
@@ -94,7 +209,14 @@ final class PluginController extends ApiController
             return $this->error("Plugin '{$name}' is not available.", 404);
         }
 
-        if (Package::isPluginInstalled($name)) {
+        $userId = $request->user()->id;
+        $already = DB::table('user_plugin')
+            ->where('user_id', $userId)
+            ->where('plugin_name', $name)
+            ->where('is_active', true)
+            ->exists();
+
+        if ($already) {
             return $this->error("Plugin '{$name}' is already installed.", 400);
         }
 
@@ -119,15 +241,20 @@ final class PluginController extends ApiController
                 [
                     'author' => 'Mitunierp',
                     'summary' => self::AVAILABLE[$name]['description'],
-                    'description' => self::AVAILABLE[$name]['description'],
                     'icon' => self::AVAILABLE[$name]['icon'],
                     'latest_version' => '1.0.0',
                     'license' => 'MIT',
-                    'is_core' => false,
                     'is_installed' => true,
                     'is_active' => true,
                 ]
             );
+
+            DB::table('user_plugin')->insert([
+                'user_id' => $userId,
+                'plugin_name' => $name,
+                'is_active' => true,
+                'installed_at' => now(),
+            ]);
 
             DB::commit();
 
@@ -149,25 +276,21 @@ final class PluginController extends ApiController
             return $this->validationError(['name' => ['Plugin name is required.']]);
         }
 
-        if (!Package::isPluginInstalled($name)) {
+        $userId = $request->user()->id;
+        $existing = DB::table('user_plugin')
+            ->where('user_id', $userId)
+            ->where('plugin_name', $name)
+            ->where('is_active', true)
+            ->exists();
+
+        if (!$existing) {
             return $this->error("Plugin '{$name}' is not installed.", 400);
         }
 
-        $plugin = Package::getPackagePlugin($name);
-
-        if ($plugin !== null) {
-            $dependents = $plugin->dependents()->where('is_installed', true)->get();
-            if ($dependents->isNotEmpty()) {
-                $names = $dependents->pluck('name')->implode(', ');
-
-                return $this->error("Cannot uninstall '{$name}'. Dependent plugins must be uninstalled first: {$names}", 409);
-            }
-        }
-
-        Plugin::query()->where('name', $name)->update([
-            'is_installed' => false,
-            'is_active' => false,
-        ]);
+        DB::table('user_plugin')
+            ->where('user_id', $userId)
+            ->where('plugin_name', $name)
+            ->update(['is_active' => false]);
 
         return $this->success(['name' => $name], "Plugin '{$name}' uninstalled successfully.");
     }

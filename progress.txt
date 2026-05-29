@@ -27,3 +27,14 @@
 [2026-05-29 11:15] DONE Updated seeders run automatically during plugin install via db:seed command
 [2026-05-29 11:30] DONE Updated concept docs — Replaced acme references with mitunierp in concept-plans.md and concept-fullstack.md
 
+[2026-06-01 07:00] DONE Created Blog & Contacts plugins — Models, migrations, controllers, routes, ServiceProviders
+[2026-06-01 07:30] DONE Upgraded Package.php — Added icon(), description(), latestVersion(), license(), hasUninstallCommand(), seederClasses
+[2026-06-01 08:00] DONE Added /available endpoint — PluginController.available() returns curated plugin list with install status
+[2026-06-01 08:30] DONE Added dependents check on uninstall — Prevents uninstall if other plugins depend on it
+[2026-06-01 09:00] DONE Created PLUGIN_CONTRACT.md — FE-BE alignment document for plugin system
+[2026-06-01 09:30] DONE Fixed install 500 error — Added CommandNotFoundException catch + strtolower on plugin name
+[2026-06-01 10:00] DONE Fixed Artisan::call not finding commands during HTTP requests — Controller now handles install directly with migrate + db:seed
+[2026-06-01 10:30] DONE Created user_plugin pivot table — Per-user plugin tracking (user_id, plugin_name, is_active)
+[2026-06-01 11:00] DONE PluginController install/uninstall/available now filter by authenticated user
+[2026-06-01 11:30] DONE UserResource now returns plugins field — /api/v1/me shows installed plugins per user
+

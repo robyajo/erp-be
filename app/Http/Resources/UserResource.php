@@ -7,6 +7,7 @@ namespace App\Http\Resources;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @mixin User
@@ -38,6 +39,10 @@ final class UserResource extends JsonResource
             'emailVerified' => !is_null($this->email_verified_at),
             'emailVerifiedAt' => $this->email_verified_at?->toIso8601String(),
             'email_verified_at' => $this->email_verified_at?->toIso8601String(),
+            'plugins' => DB::table('user_plugin')
+                ->where('user_id', $this->id)
+                ->where('is_active', true)
+                ->pluck('plugin_name'),
             'created_at' => $this->created_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),
         ];
